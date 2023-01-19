@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Batteries</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Select device</ion-label>
+      <ion-select>
+        <ion-select-option value="">Device 1</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+
+    <ion-button expand="block">Add Battery</ion-button>
+
+    </ion-list>
+
+    <ion-list>
+      <ion-item-sliding>
+        <ion-item-options side="start">
+          <ion-item-option color="detail">Edit</ion-item-option>
+        </ion-item-options>
+
+        <ion-item>
+          <ion-label>First Battery</ion-label>
+          <ion-label color="primary">Device 1</ion-label>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger">Delete</ion-item-option>
+        </ion-item-options>
+
+      </ion-item-sliding>
+      </ion-list>
+
+</ion-content>
