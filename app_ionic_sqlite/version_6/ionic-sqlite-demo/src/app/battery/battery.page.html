@@ -1,9 +1,84 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>battery</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Batteries</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">Device</ion-label>
+      <ion-select placeholder="Select device" (ionChange)="handleChange($event)" [(ngModel)]="batteryInput.device_id">
+        <ion-select-option *ngFor="let device of devices">{{device.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input [(ngModel)]="batteryInput.name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Purchase date</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-datetime-button
+      datetime="date1"
+      mode="date"></ion-datetime-button>
+
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime id="date1" presentation="date" [(ngModel)]="batteryInput.date_of_purchase"></ion-datetime>^<!-- presentation="date" affiche juste la date !!! -->
+        </ng-template>
+      </ion-modal>
+
+    </ion-item>
+
+    <ion-item>
+      <ion-label >N° of cycles : </ion-label>
+      <ion-input type="number" [(ngModel)]="batteryInput.number_of_cycles" placeholder="0" min="0"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Last charging</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-datetime-button
+      datetime="date2"
+      mode="date"
+      ></ion-datetime-button>
+
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime id="date2" presentation="date" [(ngModel)]="batteryInput.last_cycle_date"></ion-datetime> <!-- presentation="date" affiche juste la date !!! -->
+        </ng-template>
+      </ion-modal>
+
+    </ion-item>
+
+    <ion-button expand="block" (click)="addBattery()">Add Device</ion-button>
+
+    </ion-list>
+
+    <ion-list *ngFor="let battery of batteries">
+      <ion-item-sliding>
+        <ion-item-options side="start">
+          <ion-item-option color="detail" (click)="editBattery(battery)">Edit</ion-item-option>
+        </ion-item-options>
+
+        <ion-item >
+          <ion-label>{{battery.bat_name}}</ion-label>
+          <ion-label color="primary">{{battery.dev_name}}</ion-label>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger">Delete</ion-item-option>
+        </ion-item-options>
+
+      </ion-item-sliding>
+      </ion-list>
 
 </ion-content>

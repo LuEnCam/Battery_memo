@@ -9,6 +9,8 @@ import { DatabaseService } from '../database.service';
 export class DevicePage implements OnInit {
   devices:any = [];
   deviceName: string = '';
+  editMode : boolean = false;
+  editDeviceId : number = 0;
 
   constructor(public database: DatabaseService) {
     this.database.createDatabase().then(() => {
@@ -35,12 +37,24 @@ export class DevicePage implements OnInit {
       alert('Please enter device name');
       return false;
     }
-    this.database.insertIntoDevicesTable(this.deviceName).then((data) => {
-      this.deviceName = '';
-      alert('Device added');
-      this.getAllDevices();
-      alert(JSON.stringify(this.devices));
-    });
+    if (this.editMode) {
+      //edit device
+      this.database.editDevice(this.editDeviceId, this.deviceName).then((data) => {
+        this.deviceName = '';
+        this.editMode = false;
+
+        alert('Device updated');
+        //alert(JSON.stringify(this.devices));
+      });
+    } else {
+      //add device
+      this.database.insertIntoDevicesTable(this.deviceName).then((data) => {
+        this.deviceName = '';
+        alert('Device added');
+        //alert(JSON.stringify(this.devices));
+      });
+    }
+    this.getAllDevices();
     return true;
 
     }
@@ -50,6 +64,12 @@ export class DevicePage implements OnInit {
       alert(data);
       this.getAllDevices();
     });
+  }
+
+  editDevice(_device : any) {
+    this.editMode = true;
+    this.deviceName = _device.name;
+    this.editDeviceId = _device.id;
   }
 
 }

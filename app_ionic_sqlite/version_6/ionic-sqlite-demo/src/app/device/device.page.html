@@ -20,7 +20,7 @@
   <ion-list>
     <ion-item-sliding *ngFor="let device of devices">
       <ion-item-options side="start">
-        <ion-item-option color="detail" >Edit</ion-item-option> <!-- (click)="editDevice(device)" -->
+        <ion-item-option color="detail" (click)="editDevice(device)" >Edit</ion-item-option> <!--  -->
       </ion-item-options>
 
       <ion-item>

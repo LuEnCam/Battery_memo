@@ -22,16 +22,14 @@ export class DatabaseService {
       location: 'default',
     }).then((db : SQLiteObject) => {
       this.databaseObj = db;
-      alert('Database created');
+      //alert('Database created');
 
     }).catch(e => { alert("error on creating database" + JSON.stringify(e)); });
 
     // Create tables
     await this.createTables().then(() => {
-      alert('Tables created');
+      //alert('Tables created');
     } ).catch(e => { alert("error on creating tables" + JSON.stringify(e)); });
-
-
   }
 
 
@@ -47,7 +45,7 @@ export class DatabaseService {
     this.deviceTableEmpty = await this.checkIfTableIsEmpty(this.tables.devices);
 
     if (this.deviceTableExists && this.deviceTableEmpty) {
-      alert('Table devices exists');
+      //alert('Table devices exists');
       await this.insertIntoDevicesTable('Other');
       await this.insertIntoDevicesTable('Telefon');
       await this.insertIntoDevicesTable('Laptop');
@@ -87,10 +85,10 @@ export class DatabaseService {
       SELECT name FROM sqlite_master WHERE type='table' AND name=?`
       , [tableName]).then((res) => {
         if (res.rows.length > 0) {
-          alert('Table ' + tableName + ' exists');
+          //alert('Table ' + tableName + ' exists');
           temp = true;
         } else {
-          alert('Table ' + tableName + ' does not exist');
+          //alert('Table ' + tableName + ' does not exist');
           temp = false;
         }
       }).catch(e => { alert("error on checking if table exists" + JSON.stringify(e)); });
@@ -103,10 +101,10 @@ export class DatabaseService {
       SELECT * FROM ${tableName}`
       , []).then((res) => {
         if (res.rows.length > 0) {
-          alert('Table ' + tableName + ' is not empty');
+          //alert('Table ' + tableName + ' is not empty');
           temp = false;
         } else {
-          alert('Table ' + tableName + ' is empty');
+          //alert('Table ' + tableName + ' is empty');
           temp = true;
         }
       }).catch(e => { alert("error on checking if table is empty" + JSON.stringify(e)); });
@@ -119,7 +117,7 @@ export class DatabaseService {
     await this.databaseObj?.executeSql(`
       INSERT INTO ${this.tables.devices} (name) VALUES (?)`
       , [name]).then(() => {
-        alert('Device inserted');
+        //alert('Device inserted');
       }).catch(e => {
         if (e.code === 6) {
           alert('Device already exists');
@@ -127,16 +125,40 @@ export class DatabaseService {
         alert("error on inserting into devices table" + JSON.stringify(e)); });
   }
 
+  async InsertIntoBatteryTable(name: string, device_id: number, date_of_purchase: string, number_of_cycles: number, last_cycle_date: string) {
+    await this.databaseObj?.executeSql(`
+      INSERT INTO ${this.tables.batteries} (name, device_id, date_of_purchase, number_of_cycles, last_cycle_date) VALUES (?, ?, ?, ?, ?)`
+      , [name, device_id, date_of_purchase, number_of_cycles, last_cycle_date]).then(() => {
+        //alert('Battery inserted');
+      }).catch(e => {
+        if (e.code === 6) {
+          alert('Battery already exists');
+        }
+        alert("error on inserting into batteries table" + JSON.stringify(e)); });
+  }
+
+
   async getAllDevices() {
     return this.databaseObj?.executeSql(`
       SELECT * FROM ${this.tables.devices} ORDER BY name ASC`
       , []).then((res) => {
-        alert(JSON.stringify(res));
+        //alert(JSON.stringify(res));
         return res;
       }).catch(e => { alert("error on getting devices" + JSON.stringify(e)); });
 
 
   }
+
+  async getAllBatteries() {
+    return this.databaseObj?.executeSql(`
+      SELECT *, batteries.name as bat_name, devices.name as dev_name FROM ${this.tables.batteries} LEFT JOIN devices ON devices.id=batteries.device_id ORDER BY name ASC`
+      , []).then((res) => {
+        //alert(JSON.stringify(res));
+        return res;
+      }).catch(e => { alert("error on getting batteries" + JSON.stringify(e)); });
+  }
+
+
 
   async deleteDevice(id: number) {
     return this.databaseObj?.executeSql(`
@@ -150,8 +172,26 @@ export class DatabaseService {
     return this.databaseObj?.executeSql(`
       UPDATE ${this.tables.devices} SET name = ? WHERE id = ?`
       , [name, id]).then((res) => {
-        alert('Device edited');
+        //alert('Device edited');
       }).catch(e => { alert("error on editing device" + JSON.stringify(e)); });
+  }
+
+  async editBattery(id: number, name: string, device_id: number, date_of_purchase: string, number_of_cycles: number, last_cycle_date: string) {
+    return this.databaseObj?.executeSql(`
+      UPDATE ${this.tables.batteries} SET name = ?, device_id = ?, date_of_purchase = ?, number_of_cycles = ?, last_cycle_date = ? WHERE id = ?`
+      , [name, device_id, date_of_purchase, number_of_cycles, last_cycle_date, id]).then((res) => {
+        //alert('Battery edited');
+      }).catch(e => { alert("error on editing battery" + JSON.stringify(e)); });
+  }
+
+
+  async getDeviceByIdByName(name: string) {
+    return this.databaseObj?.executeSql(`
+      SELECT * FROM ${this.tables.devices} WHERE name = ?`
+      , [name]).then((res) => {
+        //alert(JSON.stringify(res));
+        return res;
+      }).catch(e => { alert("error on getting device by name" + JSON.stringify(e)); });
   }
 
 }

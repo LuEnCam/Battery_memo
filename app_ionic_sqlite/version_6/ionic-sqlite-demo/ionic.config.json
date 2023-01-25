@@ -1,5 +1,5 @@
 {
-  "name": "ionic-sqlite-demo",
+  "name": "Battery Reminder",
   "integrations": {
     "capacitor": {}
   },
