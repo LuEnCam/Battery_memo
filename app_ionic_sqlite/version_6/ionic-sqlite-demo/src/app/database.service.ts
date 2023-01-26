@@ -151,7 +151,7 @@ export class DatabaseService {
 
   async getAllBatteries() {
     return this.databaseObj?.executeSql(`
-      SELECT *, batteries.id as bat_id, devices.id as dev_id, batteries.name as bat_name, devices.name as dev_name FROM ${this.tables.batteries} LEFT JOIN devices ON devices.id=batteries.device_id ORDER BY name ASC`
+      SELECT *, substr(batteries.last_cycle_date,1,10) as bat_substr_date, batteries.id as bat_id, devices.id as dev_id, batteries.name as bat_name, devices.name as dev_name FROM ${this.tables.batteries} LEFT JOIN devices ON devices.id=batteries.device_id ORDER BY bat_substr_date ASC`
       , []).then((res) => {
         //alert(JSON.stringify(res));
         return res;
