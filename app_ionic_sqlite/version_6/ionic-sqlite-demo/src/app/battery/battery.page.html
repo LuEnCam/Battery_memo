@@ -11,7 +11,7 @@
   <ion-list>
     <ion-item>
       <ion-label position="floating">Device</ion-label>
-      <ion-select placeholder="Select device" (ionChange)="handleChange($event)" [(ngModel)]="batteryInput.device_id">
+      <ion-select placeholder="Select device" (ionChange)="handleChange($event)" [(ngModel)]="currentDevice">
         <ion-select-option *ngFor="let device of devices">{{device.name}}</ion-select-option>
       </ion-select>
     </ion-item>
@@ -31,7 +31,7 @@
 
       <ion-modal [keepContentsMounted]="true">
         <ng-template>
-          <ion-datetime id="date1" presentation="date" [(ngModel)]="batteryInput.date_of_purchase"></ion-datetime>^<!-- presentation="date" affiche juste la date !!! -->
+          <ion-datetime id="date1" presentation="date" [(ngModel)]="batteryInput.date_of_purchase" value="2023-01-01"></ion-datetime><!-- presentation="date" affiche juste la date !!! -->
         </ng-template>
       </ion-modal>
 
@@ -39,7 +39,7 @@
 
     <ion-item>
       <ion-label >N° of cycles : </ion-label>
-      <ion-input type="number" [(ngModel)]="batteryInput.number_of_cycles" placeholder="0" min="0"></ion-input>
+      <ion-input type="number" [(ngModel)]="batteryInput.number_of_cycles" placeholder="0" min="0" value="0"></ion-input>
     </ion-item>
 
     <ion-item>
@@ -53,13 +53,13 @@
 
       <ion-modal [keepContentsMounted]="true">
         <ng-template>
-          <ion-datetime id="date2" presentation="date" [(ngModel)]="batteryInput.last_cycle_date"></ion-datetime> <!-- presentation="date" affiche juste la date !!! -->
+          <ion-datetime id="date2" presentation="date" [(ngModel)]="batteryInput.last_cycle_date" value="2023-01-01"></ion-datetime> <!-- presentation="date" affiche juste la date !!! -->
         </ng-template>
       </ion-modal>
 
     </ion-item>
 
-    <ion-button expand="block" (click)="addBattery()">Add Device</ion-button>
+    <ion-button expand="block" (click)="addBattery()">{{addOrEdit}}</ion-button>
 
     </ion-list>
 
@@ -75,7 +75,7 @@
         </ion-item>
 
         <ion-item-options side="end">
-          <ion-item-option color="danger">Delete</ion-item-option>
+          <ion-item-option color="danger" (click)="deleteBattery(battery)">Delete</ion-item-option>
         </ion-item-options>
 
       </ion-item-sliding>

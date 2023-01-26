@@ -151,7 +151,7 @@ export class DatabaseService {
 
   async getAllBatteries() {
     return this.databaseObj?.executeSql(`
-      SELECT *, batteries.name as bat_name, devices.name as dev_name FROM ${this.tables.batteries} LEFT JOIN devices ON devices.id=batteries.device_id ORDER BY name ASC`
+      SELECT *, batteries.id as bat_id, devices.id as dev_id, batteries.name as bat_name, devices.name as dev_name FROM ${this.tables.batteries} LEFT JOIN devices ON devices.id=batteries.device_id ORDER BY name ASC`
       , []).then((res) => {
         //alert(JSON.stringify(res));
         return res;
@@ -168,6 +168,15 @@ export class DatabaseService {
       }).catch(e => { alert("error on deleting device" + JSON.stringify(e)); });
   }
 
+  async deleteBattery(id: number) {
+    return this.databaseObj?.executeSql(`
+      DELETE FROM ${this.tables.batteries} WHERE id = ?`
+      , [id]).then((res) => {
+        return res;
+      }).catch(e => { alert("error on deleting battery" + JSON.stringify(e)); });
+  }
+
+
   async editDevice(id: number, name: string) {
     return this.databaseObj?.executeSql(`
       UPDATE ${this.tables.devices} SET name = ? WHERE id = ?`
@@ -177,21 +186,31 @@ export class DatabaseService {
   }
 
   async editBattery(id: number, name: string, device_id: number, date_of_purchase: string, number_of_cycles: number, last_cycle_date: string) {
+    //alert("id :" + id + "\nname : " + name + "\ndevice_id : " + device_id + "\ndate_of_purchase : " + date_of_purchase + "\nnumber_of_cycles : " + number_of_cycles + "\nlast_cycle_date : " + last_cycle_date);
     return this.databaseObj?.executeSql(`
       UPDATE ${this.tables.batteries} SET name = ?, device_id = ?, date_of_purchase = ?, number_of_cycles = ?, last_cycle_date = ? WHERE id = ?`
       , [name, device_id, date_of_purchase, number_of_cycles, last_cycle_date, id]).then((res) => {
-        //alert('Battery edited');
+
       }).catch(e => { alert("error on editing battery" + JSON.stringify(e)); });
   }
 
 
-  async getDeviceByIdByName(name: string) {
+  async getDeviceByName(name: string) {
     return this.databaseObj?.executeSql(`
       SELECT * FROM ${this.tables.devices} WHERE name = ?`
       , [name]).then((res) => {
         //alert(JSON.stringify(res));
         return res;
       }).catch(e => { alert("error on getting device by name" + JSON.stringify(e)); });
+  }
+
+  async getDeviceNameById(id: number) {
+    return this.databaseObj?.executeSql(`
+      SELECT name FROM ${this.tables.devices} WHERE id = ?`
+      , [id]).then((res) => {
+        //alert(JSON.stringify(res));
+        return res;
+      }).catch(e => { alert("error on getting device name by id" + JSON.stringify(e)); });
   }
 
 }
