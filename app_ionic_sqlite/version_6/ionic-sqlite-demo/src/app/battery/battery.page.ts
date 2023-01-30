@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-battery',
@@ -25,13 +26,18 @@ export class BatteryPage implements OnInit {
   confirmDelete : boolean = false;
   editMode : boolean = false;
   addOrEdit : string = "Add";
+  inputMode : boolean = false;
 
-  constructor(public database: DatabaseService) {
+  constructor(public database: DatabaseService, private platform: Platform) {
     this.database.createDatabase().then(() => {
       // will call the getDevices() function after the database is created
       this.getAllDevices();
       this.getAllBatteries();
       this.addOrEdit = "Add";
+    });
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      console.log('Handler was called!');
     });
    }
 
@@ -49,8 +55,8 @@ export class BatteryPage implements OnInit {
     });
   }
 
-  getAllBatteries() {
-    this.database.getAllBatteries().then((data) => {
+  getAllBatteries(filter : string = '') {
+    this.database.getAllBatteries(filter).then((data) => {
       this.batteries = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
@@ -73,8 +79,6 @@ export class BatteryPage implements OnInit {
       alert('Please select device');
       return false;
     }
-
-
 
     if (this.batteryInput.name == '') {
       alert('Please enter battery name');
@@ -102,13 +106,6 @@ export class BatteryPage implements OnInit {
         this.batteryInput.last_cycle_date).then((data) => {
         alert('Battery updated');
       });
-      this.editMode = false;
-      this.batteryInput.name = '';
-      this.batteryInput.device_id = 0;
-      this.currentDevice = '';
-      this.batteryInput.date_of_purchase = '';
-      this.batteryInput.number_of_cycles = 0;
-      this.batteryInput.last_cycle_date = '';
     }
     else
     {
@@ -121,6 +118,15 @@ export class BatteryPage implements OnInit {
       alert('Battery added');
     });
   }
+  this.editMode = false;
+  this.batteryInput.name = '';
+  this.batteryInput.device_id = 0;
+  this.currentDevice = '';
+  this.batteryInput.date_of_purchase = '';
+  this.batteryInput.number_of_cycles = 0;
+  this.batteryInput.last_cycle_date = '';
+
+  this.inputMode = false;
   this.getAllBatteries();
   this.addOrEdit = "Add";
   return true;
@@ -157,5 +163,26 @@ export class BatteryPage implements OnInit {
       }
     }
 
+    async searchBattery(ev: any) {
+      const val = ev.target.value;
+      if (val && val.trim() != '') {
+        this.getAllBatteries(val);
+      }
+      else {
+        this.getAllBatteries();
+      }
+    }
+
+    addClick(ev: any) {
+      this.inputMode = !this.inputMode;
+    }
+
+    abortAdd() {
+      this.inputMode = false;
+    }
+
+    showBatteryDetails(_battery : any) {
+      alert('Battery name: ' + _battery.bat_name + '\n\nDate of purchase: ' + _battery.bat_substr_date_purchase + '\n\nNumber of cycles: ' + _battery.number_of_cycles + '\n\nLast cycle date: ' + _battery.bat_substr_date);
+    }
 
 }

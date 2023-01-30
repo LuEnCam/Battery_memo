@@ -59,7 +59,7 @@ export class DatabaseService {
       await this.insertIntoDevicesTable('Bike');
       await this.insertIntoDevicesTable('Scooter');
       await this.insertIntoDevicesTable('Game console');
-      await this.insertIntoDevicesTable('remote control');
+      await this.insertIntoDevicesTable('Remote control');
       await this.insertIntoDevicesTable('Toy');
       await this.insertIntoDevicesTable('AA batteries');
       await this.insertIntoDevicesTable('AAA batteries');
@@ -149,9 +149,13 @@ export class DatabaseService {
 
   }
 
-  async getAllBatteries() {
+  async getAllBatteries(filter : string = '') {
+     let whereString  = '';
+    if (filter != '') {
+      whereString = `WHERE batteries.name LIKE "%${filter}%"`;
+    }
     return this.databaseObj?.executeSql(`
-      SELECT *, substr(batteries.last_cycle_date,1,10) as bat_substr_date, batteries.id as bat_id, devices.id as dev_id, batteries.name as bat_name, devices.name as dev_name FROM ${this.tables.batteries} LEFT JOIN devices ON devices.id=batteries.device_id ORDER BY bat_substr_date ASC`
+      SELECT *, substr(batteries.last_cycle_date,1,10) as bat_substr_date,substr(batteries.date_of_purchase,1,10) as bat_substr_date_purchase , batteries.id as bat_id, devices.id as dev_id, batteries.name as bat_name, devices.name as dev_name FROM ${this.tables.batteries} LEFT JOIN devices ON devices.id=batteries.device_id ${whereString} ORDER BY bat_substr_date ASC`
       , []).then((res) => {
         //alert(JSON.stringify(res));
         return res;

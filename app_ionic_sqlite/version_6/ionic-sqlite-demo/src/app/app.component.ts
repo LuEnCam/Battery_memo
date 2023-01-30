@@ -8,7 +8,7 @@ export class AppComponent {
   public appPages = [
     { title: 'Device', url: '/device', icon: 'id-card' },
     { title: 'Battery', url: '/battery', icon: 'battery-full' },
-    /* { title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
+    /*{ title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
     { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
     { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },
     { title: 'Archived', url: '/folder/Archived', icon: 'archive' },

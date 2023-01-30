@@ -61,7 +61,7 @@ export class DevicePage implements OnInit {
 
   deleteDevice(id : number) {
     this.database.deleteDevice(id).then((data) => {
-      alert(data);
+      //alert(data);
       this.getAllDevices();
     });
   }
